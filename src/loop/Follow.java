@@ -53,8 +53,9 @@ public class Follow {
 	/**
 	 * @param url
 	 *            要解析的用户的网址， 获得该用户关注的所有人的信息
+	 * @throws IOException 
 	 */
-	public void parseURL(String url) {
+	public void parseURL(String url) throws IOException {
 		person = new LinkedHashMap<>();
 		if (count == 0) {
 			cookie = seed.getCookie("https://www.zhihu.com/login/phone_num");
@@ -69,10 +70,14 @@ public class Follow {
 			String jsonContent = null;
 			try {
 				response = httpClient.execute(getMethod);
-				if (response.getStatusLine().getStatusCode() == 200)
+				if (response.getStatusLine().getStatusCode() == 200){
 					if (response.getEntity() != null) {
 						jsonContent = EntityUtils.toString(response.getEntity());
 					}
+				} else{
+					System.out.println("==> The cookie has failed, please delete it and run again");
+					System.exit(0);
+				}
 			} catch (IOException | ParseException e) {
 				e.printStackTrace();
 			}
